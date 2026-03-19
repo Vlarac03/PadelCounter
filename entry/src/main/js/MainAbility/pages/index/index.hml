@@ -1,33 +1,56 @@
 <swiper class="full-screen" index="0" vertical="false" indicator="true">
-<!-- PAGE 1: SCOREBOARD -->
+
+<!-- PAGE 1: SCOREBOARD / MATCH OVER -->
     <div class="container">
-        <div class="section-opp" onclick="addPointB">
-            <text class="score-opp">{{pointsB}}</text>
+    <!-- Match Over Screen -->
+        <div class="container win-page" if="{{isMatchOver}}">
+            <text class="menu-title-small">MATCH OVER</text>
+
+        <!-- Botó per "minimitzar" i veure el marcador/historial -->
+            <div class="menu-item" onclick="closeWinPage" style="background-color: #444444;">
+                <text class="menu-text">VIEW STATS</text>
+            </div>
+
+            <div class="menu-item" onclick="resetMatch" style="background-color: #ff4444;">
+                <text class="menu-text">RESET MATCH</text>
+            </div>
         </div>
 
-        <div class="center-bar">
-            <div class="btn-box" onclick="undoPoint">
-                <text class="btn-txt">←</text>
+    <!-- Normal Scoreboard -->
+        <div class="container" if="{{!isMatchOver}}">
+            <div class="section-opp" onclick="addPointB">
+                <text class="score-opp">{{pointsB}}</text>
             </div>
-            <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
-            <div class="btn-box" onclick="resetMatch">
-                <text class="btn-txt">R</text>
+            <div class="center-bar">
+                <div class="btn-box" onclick="undoPoint"><text class="btn-txt">←</text></div>
+                <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
+                <div class="btn-box" onclick="resetMatch"><text class="btn-txt">R</text></div>
             </div>
-        </div>
-
-        <div class="section-me" onclick="addPointA">
-            <text class="score-me">{{pointsA}}</text>
+            <div class="section-me" onclick="addPointA">
+                <text class="score-me">{{pointsA}}</text>
+            </div>
         </div>
     </div>
 
-<!-- PAGE 2: SETTINGS -->
+<!-- PAGE 2: HISTORY -->
+    <div class="container menu-page">
+        <text class="menu-title-small">HISTORY</text>
+        <text class="history-item">{{h1}}</text>
+        <text class="history-item">{{h2}}</text>
+        <text class="history-item">{{h3}}</text>
+        <text class="history-item" if="{{maxSets == 5}}">{{h4}}</text>
+        <text class="history-item" if="{{maxSets == 5}}">{{h5}}</text>
+    </div>
+
+<!-- PAGE 3: SETTINGS -->
     <div class="container menu-page">
         <text class="menu-title-small">SETTINGS</text>
-
         <div class="menu-item" onclick="toggleGoldenPoint">
             <text class="menu-text">Golden Point: {{goldenPoint ? 'ON' : 'OFF'}}</text>
         </div>
-
-    <!-- Espai buit per si vols afegir més opcions en el futur -->
+        <div class="menu-item" onclick="toggleMaxSets">
+            <text class="menu-text">Match to: {{maxSets}} Sets</text>
+        </div>
     </div>
+
 </swiper>
