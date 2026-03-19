@@ -5,41 +5,61 @@ export default {
         pointsA: "0", pointsB: "0",
         gamesA: 0, gamesB: 0,
         setsA: 0, setsB: 0,
-        isTieBreak: false, // Nova variable per controlar el mode
-        lastState: null
+        isTieBreak: false,
+        goldenPoint: false,
+        state1: null,
+        state2: null,
+        state3: null
     },
 
-    onInit() { this.updateUI(); },
+    onInit() {
+        this.updateUI();
+    },
 
     saveState() {
-        this.lastState = JSON.parse(JSON.stringify({
+        this.state3 = this.state2;
+        this.state2 = this.state1;
+        this.state1 = {
             sA: this.scoreA, sB: this.scoreB,
             gA: this.gamesA, gB: this.gamesB,
             stA: this.setsA, stB: this.setsB,
             tb: this.isTieBreak
-        }));
+        };
     },
 
     undoPoint() {
-        if (this.lastState) {
-            this.scoreA = this.lastState.sA; this.scoreB = this.lastState.sB;
-            this.gamesA = this.lastState.gA; this.gamesB = this.lastState.gB;
-            this.setsA = this.lastState.stA; this.setsB = this.lastState.stB;
-            this.isTieBreak = this.lastState.tb;
-            this.lastState = null;
-            this.updateUI();
-        }
+        if (!this.state1) return;
+        var last = this.state1;
+        this.scoreA = last.sA;
+        this.scoreB = last.sB;
+        this.gamesA = last.gA;
+        this.gamesB = last.gB;
+        this.setsA = last.stA;
+        this.setsB = last.stB;
+        this.isTieBreak = last.tb;
+        this.state1 = this.state2;
+        this.state2 = this.state3;
+        this.state3 = null;
+        this.updateUI();
     },
 
-    addPointA() { this.saveState(); this.logic("A"); },
-    addPointB() { this.saveState(); this.logic("B"); },
+    toggleGoldenPoint() {
+        this.goldenPoint = !this.goldenPoint;
+    },
+
+    addPointA() {
+        this.saveState();
+        this.logic("A");
+    },
+
+    addPointB() {
+        this.saveState();
+        this.logic("B");
+    },
 
     logic(winner) {
-        if (this.isTieBreak) {
-            this.logicTieBreak(winner);
-        } else {
-            this.logicNormal(winner);
-        }
+        if (this.isTieBreak) { this.logicTieBreak(winner); }
+        else { this.logicNormal(winner); }
         this.updateUI();
     },
 
@@ -47,49 +67,37 @@ export default {
         if (winner === "A") {
             if (this.scoreA < 3) this.scoreA++;
             else if (this.scoreA === 3 && this.scoreB < 3) this.winGame("A");
-            else if (this.scoreA === 3 && this.scoreB === 3) this.scoreA = 4; // Ad
-            else if (this.scoreA === 3 && this.scoreB === 4) this.scoreB = 3; // Deuce
+            else if (this.scoreA === 3 && this.scoreB === 3) {
+                if (this.goldenPoint) this.winGame("A"); else this.scoreA = 4;
+            } else if (this.scoreA === 3 && this.scoreB === 4) this.scoreB = 3;
             else if (this.scoreA === 4) this.winGame("A");
         } else {
             if (this.scoreB < 3) this.scoreB++;
             else if (this.scoreB === 3 && this.scoreA < 3) this.winGame("B");
-            else if (this.scoreB === 3 && this.scoreA === 3) this.scoreB = 4; // Ad
-            else if (this.scoreB === 3 && this.scoreA === 4) this.scoreA = 3; // Deuce
+            else if (this.scoreB === 3 && this.scoreA === 3) {
+                if (this.goldenPoint) this.winGame("B"); else this.scoreB = 4;
+            } else if (this.scoreB === 3 && this.scoreA === 4) this.scoreA = 3;
             else if (this.scoreB === 4) this.winGame("B");
         }
     },
 
     logicTieBreak(winner) {
         if (winner === "A") this.scoreA++; else this.scoreB++;
-
-        // Guanya el tie-break qui arriba a 7 amb diferència de 2
-        if (this.scoreA >= 7 && (this.scoreA - this.scoreB) >= 2) {
-            this.winSet("A");
-        } else if (this.scoreB >= 7 && (this.scoreB - this.scoreA) >= 2) {
-            this.winSet("B");
-        }
+        if (this.scoreA >= 7 && (this.scoreA - this.scoreB) >= 2) this.winSet("A");
+        else if (this.scoreB >= 7 && (this.scoreB - this.scoreA) >= 2) this.winSet("B");
     },
 
     winGame(team) {
         this.scoreA = 0; this.scoreB = 0;
         if (team === "A") this.gamesA++; else this.gamesB++;
-
-        // Comprovar si anem a Tie-Break
-        if (this.gamesA === 6 && this.gamesB === 6) {
-            this.isTieBreak = true;
-        }
-        // Guanyar set normal
-        else if ((this.gamesA >= 6 && this.gamesA - this.gamesB >= 2) || this.gamesA === 7) {
-            this.winSet("A");
-        } else if ((this.gamesB >= 6 && this.gamesB - this.gamesA >= 2) || this.gamesB === 7) {
-            this.winSet("B");
-        }
+        if (this.gamesA === 6 && this.gamesB === 6) this.isTieBreak = true;
+        else if ((this.gamesA >= 6 && this.gamesA - this.gamesB >= 2) || this.gamesA === 7) this.winSet("A");
+        else if ((this.gamesB >= 6 && this.gamesB - this.gamesA >= 2) || this.gamesB === 7) this.winSet("B");
     },
 
     winSet(team) {
         if (team === "A") this.setsA++; else this.setsB++;
-        this.gamesA = 0; this.gamesB = 0;
-        this.scoreA = 0; this.scoreB = 0;
+        this.gamesA = 0; this.gamesB = 0; this.scoreA = 0; this.scoreB = 0;
         this.isTieBreak = false;
     },
 
@@ -108,7 +116,7 @@ export default {
         this.gamesA = 0; this.gamesB = 0;
         this.setsA = 0; this.setsB = 0;
         this.isTieBreak = false;
-        this.lastState = null;
+        this.state1 = null; this.state2 = null; this.state3 = null;
         this.updateUI();
     }
 }

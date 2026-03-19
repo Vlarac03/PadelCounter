@@ -1,15 +1,33 @@
-<div class="container">
-    <div class="section-opp" onclick="addPointB">
-        <text class="score-opp">{{pointsB}}</text>
+<swiper class="full-screen" index="0" vertical="false" indicator="true">
+<!-- PAGE 1: SCOREBOARD -->
+    <div class="container">
+        <div class="section-opp" onclick="addPointB">
+            <text class="score-opp">{{pointsB}}</text>
+        </div>
+
+        <div class="center-bar">
+            <div class="btn-box" onclick="undoPoint">
+                <text class="btn-txt">←</text>
+            </div>
+            <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
+            <div class="btn-box" onclick="resetMatch">
+                <text class="btn-txt">R</text>
+            </div>
+        </div>
+
+        <div class="section-me" onclick="addPointA">
+            <text class="score-me">{{pointsA}}</text>
+        </div>
     </div>
 
-    <div class="center-bar">
-        <div class="btn-box" onclick="undoPoint"><text class="btn-txt">←</text></div>
-        <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
-        <div class="btn-box" onclick="resetMatch"><text class="btn-txt">R</text></div>
-    </div>
+<!-- PAGE 2: SETTINGS -->
+    <div class="container menu-page">
+        <text class="menu-title-small">SETTINGS</text>
 
-    <div class="section-me" onclick="addPointA">
-        <text class="score-me">{{pointsA}}</text>
+        <div class="menu-item" onclick="toggleGoldenPoint">
+            <text class="menu-text">Golden Point: {{goldenPoint ? 'ON' : 'OFF'}}</text>
+        </div>
+
+    <!-- Espai buit per si vols afegir més opcions en el futur -->
     </div>
-</div>
+</swiper>
