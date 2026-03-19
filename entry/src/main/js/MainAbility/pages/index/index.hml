@@ -4,7 +4,7 @@
     </div>
 
     <div class="center-bar">
-        <div class="btn-box" onclick="undoPoint"><text class="btn-txt">↩</text></div>
+        <div class="btn-box" onclick="undoPoint"><text class="btn-txt">←</text></div>
         <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
         <div class="btn-box" onclick="resetMatch"><text class="btn-txt">R</text></div>
     </div>
