@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="section-opp" onclick="addPointB">
+        <text class="score-opp">{{pointsB}}</text>
+    </div>
+
+    <div class="center-bar">
+        <div class="btn-box" onclick="undoPoint"><text class="btn-txt">↩</text></div>
+        <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
+        <div class="btn-box" onclick="resetMatch"><text class="btn-txt">R</text></div>
+    </div>
+
+    <div class="section-me" onclick="addPointA">
+        <text class="score-me">{{pointsA}}</text>
+    </div>
+</div>

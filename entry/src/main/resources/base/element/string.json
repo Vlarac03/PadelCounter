@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "A simple and intuitive point tracker for your Padel matches. Manage scores, games, and sets directly from your wrist with an easy undo feature."
+    },
+    {
+      "name": "MainAbility_desc",
+      "value": "A simple and intuitive point tracker for your Padel matches. Manage scores, games, and sets directly from your wrist with an easy undo feature."
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "Padel Counter"
+    }
+  ]
+}
