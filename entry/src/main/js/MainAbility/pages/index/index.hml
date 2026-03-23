@@ -1,4 +1,4 @@
-<swiper class="full-screen" index="0" vertical="false" indicator="true">
+<swiper class="full-screen" index="0" vertical="false">
 
 <!-- PAGE 1: SCOREBOARD / MATCH OVER -->
     <div class="container">
