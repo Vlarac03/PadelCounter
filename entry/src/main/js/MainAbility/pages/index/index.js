@@ -12,6 +12,7 @@ export default {
         winner: "",
         h1: "", h2: "", h3: "", h4: "", h5: "",
         historyCount: 0,
+        // State history stored as JSON strings for memory efficiency
         state1: null, state2: null, state3: null, state4: null, state5: null
     },
 
@@ -19,7 +20,6 @@ export default {
         this.updateUI();
     },
 
-    // Aquesta funció "tanca" la pantalla de final de partit
     closeWinPage() {
         this.isMatchOver = false;
     },
@@ -30,34 +30,53 @@ export default {
         }
     },
 
+    // Save current match state to history
     saveState() {
         if (this.isMatchOver) return;
+
         this.state5 = this.state4;
         this.state4 = this.state3;
         this.state3 = this.state2;
         this.state2 = this.state1;
-        this.state1 = {
+
+        const currentState = {
             sA: this.scoreA, sB: this.scoreB, gA: this.gamesA, gB: this.gamesB,
             stA: this.setsA, stB: this.setsB, tb: this.isTieBreak,
             h1: this.h1, h2: this.h2, h3: this.h3, h4: this.h4, h5: this.h5,
             hc: this.historyCount, over: this.isMatchOver, win: this.winner
         };
+
+        this.state1 = JSON.stringify(currentState);
     },
 
+    // Restore previous match state
     undoPoint() {
         if (!this.state1) return;
-        var s = this.state1;
-        this.scoreA = s.sA; this.scoreB = s.sB;
-        this.gamesA = s.gA; this.gamesB = s.gB;
-        this.setsA = s.stA; this.setsB = s.stB;
+
+        const s = JSON.parse(this.state1);
+
+        this.scoreA = s.sA;
+        this.scoreB = s.sB;
+        this.gamesA = s.gA;
+        this.gamesB = s.gB;
+        this.setsA = s.stA;
+        this.setsB = s.stB;
         this.isTieBreak = s.tb;
-        this.h1 = s.h1; this.h2 = s.h2; this.h3 = s.h3; this.h4 = s.h4; this.h5 = s.h5;
+        this.h1 = s.h1;
+        this.h2 = s.h2;
+        this.h3 = s.h3;
+        this.h4 = s.h4;
+        this.h5 = s.h5;
         this.historyCount = s.hc;
         this.isMatchOver = s.over;
         this.winner = s.win;
-        this.state1 = this.state2; this.state2 = this.state3;
-        this.state3 = this.state4; this.state4 = this.state5;
+
+        this.state1 = this.state2;
+        this.state2 = this.state3;
+        this.state3 = this.state4;
+        this.state4 = this.state5;
         this.state5 = null;
+
         this.updateUI();
     },
 
@@ -96,8 +115,10 @@ export default {
     },
 
     winGame(team) {
-        this.scoreA = 0; this.scoreB = 0;
+        this.scoreA = 0;
+        this.scoreB = 0;
         if (team === "A") { this.gamesA++; } else { this.gamesB++; }
+
         if (this.gamesA === 6 && this.gamesB === 6) {
             this.isTieBreak = true;
         } else if ((this.gamesA >= 6 && (this.gamesA - this.gamesB) >= 2) || this.gamesA === 7) {
@@ -121,7 +142,6 @@ export default {
         var setsNeeded = (this.maxSets === 3) ? 2 : 3;
         if (this.setsA === setsNeeded || this.setsB === setsNeeded) {
             this.isMatchOver = true;
-            // No fem el reset automàtic per permetre veure el marcador final
         } else {
             this.gamesA = 0; this.gamesB = 0;
             this.scoreA = 0; this.scoreB = 0;
@@ -131,8 +151,8 @@ export default {
 
     updateUI() {
         if (this.isTieBreak) {
-            this.pointsA = this.scoreA + "";
-            this.pointsB = this.scoreB + "";
+            this.pointsA = this.scoreA.toString();
+            this.pointsB = this.scoreB.toString();
         } else {
             this.pointsA = this.pointsLabels[this.scoreA];
             this.pointsB = this.pointsLabels[this.scoreB];

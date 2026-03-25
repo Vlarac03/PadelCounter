@@ -3,14 +3,18 @@
     "bundleName": "com.vlarac.padelcounter",
     "vendor": "Vlarac",
     "version": {
-      "code": 1000000,
+      "code": 1,
       "name": "1.0.0"
     }
   },
-  "deviceConfig": {},
+  "deviceConfig": {
+    "default": {
+      "keepAlive": false
+    }
+  },
   "module": {
     "deviceType": [
-      "liteWearable", "wearable"
+      "liteWearable"
     ],
     "distro": {
       "deliveryWithInstall": true,
@@ -34,7 +38,11 @@
         "pages": [
           "pages/index/index"
         ],
-        "name": ".MainAbility"
+        "name": ".MainAbility",
+        "window": {
+          "designWidth": 466,
+          "autoDesignWidth": false
+        }
       }
     ]
   }
