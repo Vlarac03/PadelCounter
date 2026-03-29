@@ -1,4 +1,4 @@
-<swiper class="full-screen" index="0" vertical="false">
+<swiper class="full-screen" index="0" vertical="false" indicator="false">
 
     <div class="container">
         <div class="container win-page" if="{{isMatchOver}}">

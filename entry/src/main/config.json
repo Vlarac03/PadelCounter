@@ -3,8 +3,8 @@
     "bundleName": "com.vlarac.padelcounter",
     "vendor": "Vlarac",
     "version": {
-      "code": 1,
-      "name": "1.0.0"
+      "code": 111,
+      "name": "1.1.1"
     }
   },
   "deviceConfig": {
@@ -40,7 +40,7 @@
         ],
         "name": ".MainAbility",
         "window": {
-          "designWidth": 466,
+          "designWidth": 454,
           "autoDesignWidth": false
         }
       }
