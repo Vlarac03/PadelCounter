@@ -1,19 +1,21 @@
 <swiper class="full-screen" index="0" vertical="false" indicator="false">
 
     <div class="container">
-        <div class="container win-page" if="{{isMatchOver}}">
-            <text class="menu-title-small">MATCH OVER</text>
+        <div class="container win-page" if="{{isMatchOver && showWinPage}}">
+            <text class="win-title">MATCH OVER</text>
+            <text class="win-team">{{winner === 'A' ? 'YOU WIN!' : 'OPP WINS!'}}</text>
+            <text class="win-score">{{setsA}} - {{setsB}}</text>
 
-            <div class="menu-item" onclick="closeWinPage" style="background-color: #444444;">
-                <text class="menu-text">VIEW STATS</text>
+            <div class="win-btn" onclick="closeWinPage" style="background-color: #444444;">
+                <text class="win-btn-text">VIEW STATS</text>
             </div>
 
-            <div class="menu-item" onclick="resetMatch" style="background-color: #ff4444;">
-                <text class="menu-text">RESET MATCH</text>
+            <div class="win-btn" onclick="resetMatch" style="background-color: #cc2222;">
+                <text class="win-btn-text">RESET MATCH</text>
             </div>
         </div>
 
-        <div class="container" if="{{!isMatchOver}}">
+        <div class="container" if="{{!isMatchOver || !showWinPage}}">
             <div class="section-opp" onclick="addPointB">
                 <text class="score-opp">{{pointsB}}</text>
             </div>
@@ -22,7 +24,7 @@
                 <div class="btn-box" onclick="undoPoint">
                     <text class="btn-txt">←</text>
                 </div>
-                <text class="info-text">{{setsA}}-{{setsB}} | {{gamesA}}-{{gamesB}}</text>
+                <text class="info-text">{{setsA}} - {{setsB}} | {{gamesA}} - {{gamesB}}</text>
                 <div class="btn-box" onclick="resetMatch">
                     <text class="btn-txt">R</text>
                 </div>
@@ -53,6 +55,7 @@
         <div class="menu-item" onclick="toggleMaxSets">
             <text class="menu-text">Match to: {{maxSets}} Sets</text>
         </div>
-    </div>
 
+        <text class="footer-text">Developed by Vlarac</text>
+    </div>
 </swiper>

@@ -25,5 +25,22 @@
 
 .history-item { font-size: 35px; color: #ffffff; margin-bottom: 15px; width: 466px; text-align: center; }
 
+/* Win page amb elements propis més compactes */
 .win-page { background-color: #000000; justify-content: center; align-items: center; }
-.win-team { font-size: 50px; color: #44ff44; margin-bottom: 40px; text-align: center; }
+.win-title { font-size: 26px; color: #888888; margin-bottom: 10px; }
+.win-team { font-size: 44px; color: #44ff44; margin-bottom: 8px; text-align: center; }
+.win-score { font-size: 36px; color: #ffffff; margin-bottom: 20px; }
+.win-btn {
+  width: 340px; height: 58px; background-color: #222222;
+  border-radius: 16px; justify-content: center; align-items: center; margin-bottom: 12px;
+}
+.win-btn-text { font-size: 26px; color: white; }
+
+.footer-text {
+  position: absolute;
+  bottom: 40px;
+  width: 466px;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+}

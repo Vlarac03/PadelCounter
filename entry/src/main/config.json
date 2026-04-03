@@ -3,18 +3,19 @@
     "bundleName": "com.vlarac.padelcounter",
     "vendor": "Vlarac",
     "version": {
-      "code": 111,
-      "name": "1.1.1"
+      "code": 120,
+      "name": "1.2.0"
     }
   },
   "deviceConfig": {
     "default": {
-      "keepAlive": false
+      "keepAlive": true
     }
   },
   "module": {
     "deviceType": [
-      "liteWearable"
+      "liteWearable",
+      "wearable"
     ],
     "distro": {
       "deliveryWithInstall": true,
@@ -42,6 +43,24 @@
         "window": {
           "designWidth": 454,
           "autoDesignWidth": false
+        }
+      }
+    ],
+    "reqPermissions": [
+      {
+        "name": "ohos.permission.READ_USER_STORAGE",
+        "reason": "Necesari per carregar el marcador guardat",
+        "usedScene": {
+          "ability": [".MainAbility"],
+          "when": "always"
+        }
+      },
+      {
+        "name": "ohos.permission.WRITE_USER_STORAGE",
+        "reason": "Necesari per guardar el marcador del partit",
+        "usedScene": {
+          "ability": [".MainAbility"],
+          "when": "always"
         }
       }
     ]
