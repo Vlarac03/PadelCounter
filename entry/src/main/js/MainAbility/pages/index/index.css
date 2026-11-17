@@ -11,15 +11,20 @@
   flex-direction: row; justify-content: space-around; align-items: center;
   border-width: 2px; border-color: #333333;
 }
+.info-col { flex-direction: column; align-items: center; }
 .info-text { font-size: 40px; color: #ffffff; }
+.info-sub { font-size: 20px; color: #aaaaaa; }
+.btn-warn { background-color: #cc2222; }
+.lose { color: #ff4444; }
+.history-time { font-size: 24px; color: #888888; margin-top: 10px; }
 .btn-box { width: 80px; height: 50px; background-color: #444444; border-radius: 10px; justify-content: center; align-items: center; }
 .btn-txt { font-size: 28px; color: white; }
 
 .menu-page { background-color: black; padding-top: 40px; }
 .menu-title-small { font-size: 30px; color: #888888; margin-bottom: 30px; }
 .menu-item {
-  width: 380px; height: 80px; background-color: #222222;
-  border-radius: 20px; justify-content: center; align-items: center; margin-bottom: 20px;
+  width: 380px; height: 70px; background-color: #222222;
+  border-radius: 20px; justify-content: center; align-items: center; margin-bottom: 14px;
 }
 .menu-text { font-size: 30px; color: white; }
 
@@ -44,3 +49,4 @@
   font-size: 18px;
   color: #ffffff;
 }
+.srv { font-size: 30px; color: #ffee00; margin-right: 12px; }

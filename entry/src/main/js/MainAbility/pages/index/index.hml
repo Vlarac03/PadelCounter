@@ -3,8 +3,9 @@
     <div class="container">
         <div class="container win-page" if="{{isMatchOver && showWinPage}}">
             <text class="win-title">MATCH OVER</text>
-            <text class="win-team">{{winner === 'A' ? 'YOU WIN!' : 'OPP WINS!'}}</text>
-            <text class="win-score">{{setsA}} - {{setsB}}</text>
+            <text class="win-team" if="{{winner === 'A'}}">YOU WIN!</text>
+            <text class="win-team lose" if="{{winner !== 'A'}}">OPP WINS!</text>
+            <text class="win-score">{{setsA}} - {{setsB}}  ·  {{duration}}</text>
 
             <div class="win-btn" onclick="closeWinPage" style="background-color: #444444;">
                 <text class="win-btn-text">VIEW STATS</text>
@@ -17,6 +18,7 @@
 
         <div class="container" if="{{!isMatchOver || !showWinPage}}">
             <div class="section-opp" onclick="addPointB">
+                <text class="srv" if="{{srvB}}">●</text>
                 <text class="score-opp">{{pointsB}}</text>
             </div>
 
@@ -24,13 +26,20 @@
                 <div class="btn-box" onclick="undoPoint">
                     <text class="btn-txt">←</text>
                 </div>
-                <text class="info-text">{{setsA}} - {{setsB}} | {{gamesA}} - {{gamesB}}</text>
-                <div class="btn-box" onclick="resetMatch">
+                <div class="info-col">
+                    <text class="info-text">{{gamesA}} - {{gamesB}}</text>
+                    <text class="info-sub">SETS {{setsA}}-{{setsB}}{{isTieBreak ? ' · TB' : ''}}</text>
+                </div>
+                <div class="btn-box" if="{{!confirmReset}}" onclick="resetMatch">
                     <text class="btn-txt">R</text>
+                </div>
+                <div class="btn-box btn-warn" if="{{confirmReset}}" onclick="resetMatch">
+                    <text class="btn-txt">OK?</text>
                 </div>
             </div>
 
             <div class="section-me" onclick="addPointA">
+                <text class="srv" if="{{srvA}}">●</text>
                 <text class="score-me">{{pointsA}}</text>
             </div>
         </div>
@@ -43,6 +52,7 @@
         <text class="history-item">{{h3}}</text>
         <text class="history-item" if="{{maxSets == 5}}">{{h4}}</text>
         <text class="history-item" if="{{maxSets == 5}}">{{h5}}</text>
+        <text class="history-time">Time: {{duration}}</text>
     </div>
 
     <div class="container menu-page">
@@ -54,6 +64,10 @@
 
         <div class="menu-item" onclick="toggleMaxSets">
             <text class="menu-text">Match to: {{maxSets}} Sets</text>
+        </div>
+
+        <div class="menu-item" onclick="toggleServe">
+            <text class="menu-text">Serve: {{serve === 'A' ? 'ME' : (serve === 'B' ? 'OPP' : 'OFF')}}</text>
         </div>
 
         <text class="footer-text">Developed by Vlarac</text>

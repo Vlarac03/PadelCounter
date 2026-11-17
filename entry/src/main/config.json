@@ -3,8 +3,8 @@
     "bundleName": "com.vlarac.padelcounter",
     "vendor": "Vlarac",
     "version": {
-      "code": 120,
-      "name": "1.2.0"
+      "code": 140,
+      "name": "1.4.0"
     }
   },
   "deviceConfig": {
@@ -58,6 +58,22 @@
       {
         "name": "ohos.permission.WRITE_USER_STORAGE",
         "reason": "Necesari per guardar el marcador del partit",
+        "usedScene": {
+          "ability": [".MainAbility"],
+          "when": "always"
+        }
+      },
+      {
+        "name": "ohos.permission.VIBRATE",
+        "reason": "Vibra en guanyar un joc o un set",
+        "usedScene": {
+          "ability": [".MainAbility"],
+          "when": "always"
+        }
+      },
+      {
+        "name": "ohos.permission.KEEP_BACKGROUND_RUNNING",
+        "reason": "Necesari per mantenir la pantalla encesa durant el partit",
         "usedScene": {
           "ability": [".MainAbility"],
           "when": "always"

@@ -1,5 +1,8 @@
 import storage from '@system.storage';
+import brightness from '@system.brightness';
+import vibrator from '@system.vibrator';
 
+// Lite wearable storage: values max ~128 bytes, so everything is saved as short comma-joined strings.
 export default {
     data: {
         pointsLabels: ["0", "15", "30", "40", "Ad"],
@@ -12,186 +15,160 @@ export default {
         maxSets: 3,
         isMatchOver: false,
         winner: "",
+        hist: [],            // finished sets: "6-4" or "7-6(7-5)"
         h1: "", h2: "", h3: "", h4: "", h5: "",
-        historyCount: 0,
-        state1: null, state2: null, state3: null,
-        setJustWon: false,
-        showWinPage: true
+        undo: [],            // last 3 states, newest first
+        serve: "",           // serving team "A"/"B", "" = off
+        t0: 0, t1: 0,        // match start / end (unix seconds)
+        duration: "-",
+        showWinPage: true,
+        srvA: false, srvB: false,
+        confirmReset: false
     },
 
     onInit() {
+        brightness.setKeepScreenOn({ keepScreenOn: true, success: function() {}, fail: function() {} });
         this.updateUI();
         this.loadRaw();
     },
 
     onShow() {
-        this.loadRaw();
+        this.updateUI();
+    },
+
+    buzz(mode) {
+        try { vibrator.vibrate({ mode: mode, success: function() {}, fail: function() {} }); } catch (e) {}
     },
 
     saveRaw() {
-        const nums = JSON.stringify({
-            a: this.scoreA, b: this.scoreB,
-            c: this.gamesA, d: this.gamesB,
-            e: this.setsA,  f: this.setsB,
-            g: this.isTieBreak ? 1 : 0,
-            m: this.historyCount,
-            n: this.isMatchOver ? 1 : 0,
-            o: this.winner,
-            p: this.maxSets,
-            q: this.goldenPoint ? 1 : 0
-        });
-
-        const hist = JSON.stringify({
-            h: this.h1, i: this.h2, j: this.h3,
-            k: this.h4, l: this.h5
-        });
-
-        // Guardem en seqüència: primer nums, quan acaba guardem hist
-        storage.clear({
-            complete: () => {
-                storage.set({
-                    key: 'mn',
-                    value: nums,
-                    success: () => {
-                        storage.set({
-                            key: 'mh',
-                            value: hist,
-                            success: function() {},
-                            fail: function() {}
-                        });
-                    },
-                    fail: function() {}
-                });
-            }
-        });
+        const set = (key, value) => storage.set({ key: key, value: value, success: function() {}, fail: function() {} });
+        set('mn', [this.scoreA, this.scoreB, this.gamesA, this.gamesB, this.setsA, this.setsB,
+            this.isTieBreak ? 1 : 0, this.isMatchOver ? 1 : 0, this.winner, this.maxSets,
+            this.goldenPoint ? 1 : 0, this.t0, this.t1, this.serve].join(','));
+        set('mh', this.hist.join(';'));
+        set('mu', this.undo.join(';'));
     },
 
     loadRaw() {
-        storage.get({
-            key: 'mn',
-            success: (data) => {
-                if (data && data !== 'null' && data !== '') {
-                    try {
-                        const s = JSON.parse(data);
-                        this.scoreA = s.a || 0; this.scoreB = s.b || 0;
-                        this.gamesA = s.c || 0; this.gamesB = s.d || 0;
-                        this.setsA  = s.e || 0; this.setsB  = s.f || 0;
-                        this.isTieBreak  = s.g === 1;
-                        this.historyCount = s.m || 0;
-                        this.isMatchOver  = s.n === 1;
-                        this.winner   = s.o || "";
-                        this.maxSets  = s.p || 3;
-                        this.goldenPoint = s.q === 1;
-                    } catch(e) {}
-                }
-                // Carreguem historial en seqüència
-                storage.get({
-                    key: 'mh',
-                    success: (data2) => {
-                        if (data2 && data2 !== 'null' && data2 !== '') {
-                            try {
-                                const s2 = JSON.parse(data2);
-                                this.h1 = s2.h || ""; this.h2 = s2.i || "";
-                                this.h3 = s2.j || ""; this.h4 = s2.k || "";
-                                this.h5 = s2.l || "";
-                            } catch(e) {}
-                        }
-                        this.updateUI();
-                    },
-                    fail: () => { this.updateUI(); }
+        const get = (key, cb) => storage.get({
+            key: key,
+            success: (d) => { cb(d && d !== 'null' ? String(d) : ""); },
+            fail: () => { cb(""); }
+        });
+        get('mn', (mn) => {
+            const s = mn.split(',');
+            if (s.length === 14) {   // ignores the old JSON format from v1.3
+                this.scoreA = +s[0]; this.scoreB = +s[1];
+                this.gamesA = +s[2]; this.gamesB = +s[3];
+                this.setsA = +s[4]; this.setsB = +s[5];
+                this.isTieBreak = s[6] === '1';
+                this.isMatchOver = s[7] === '1';
+                this.winner = s[8];
+                this.maxSets = +s[9] || 3;
+                this.goldenPoint = s[10] === '1';
+                this.t0 = +s[11]; this.t1 = +s[12]; this.serve = s[13];
+            }
+            get('mh', (mh) => {
+                this.hist = (mn.charAt(0) !== '{' && mh && mh.charAt(0) !== '{') ? mh.split(';') : [];
+                get('mu', (mu) => {
+                    this.undo = mu ? mu.split(';') : [];
+                    this.updateUI();
                 });
-            },
-            fail: () => { this.updateUI(); }
+            });
         });
     },
 
-    addPointA() {
+    addPointA() { this.addPoint('A'); },
+    addPointB() { this.addPoint('B'); },
+
+    addPoint(w) {
         if (this.isMatchOver) return;
         this.saveState();
-        this.setJustWon = false;
+        if (!this.t0) this.t0 = Math.floor(Date.now() / 1000);
+        const l = (w === 'A') ? 'B' : 'A';
+        const s = this['score' + w], o = this['score' + l];
         if (this.isTieBreak) {
-            this.scoreA++;
-            if (this.scoreA >= 7 && (this.scoreA - this.scoreB) >= 2) this.winSet("A");
+            this['score' + w] = s + 1;
+            if (s + 1 >= 7 && (s + 1 - o) >= 2) this.winSet(w);
+        } else if (s < 3) {
+            this['score' + w] = s + 1;
+        } else if (o < 3 || this.goldenPoint || s === 4) {
+            this.winGame(w);
+        } else if (o === 4) {
+            this['score' + l] = 3;
         } else {
-            if (this.scoreA < 3) this.scoreA++;
-            else if (this.scoreA === 3 && this.scoreB < 3) this.winGame("A");
-            else if (this.scoreA === 3 && this.scoreB === 3) {
-                if (this.goldenPoint) this.winGame("A"); else this.scoreA = 4;
-            } else if (this.scoreA === 3 && this.scoreB === 4) this.scoreB = 3;
-            else if (this.scoreA === 4) this.winGame("A");
+            this['score' + w] = 4;
         }
-        if (!this.setJustWon) { this.updateUI(); this.saveRaw(); }
-    },
-
-    addPointB() {
-        if (this.isMatchOver) return;
-        this.saveState();
-        this.setJustWon = false;
-        if (this.isTieBreak) {
-            this.scoreB++;
-            if (this.scoreB >= 7 && (this.scoreB - this.scoreA) >= 2) this.winSet("B");
-        } else {
-            if (this.scoreB < 3) this.scoreB++;
-            else if (this.scoreB === 3 && this.scoreA < 3) this.winGame("B");
-            else if (this.scoreB === 3 && this.scoreA === 3) {
-                if (this.goldenPoint) this.winGame("B"); else this.scoreB = 4;
-            } else if (this.scoreB === 3 && this.scoreA === 4) this.scoreA = 3;
-            else if (this.scoreB === 4) this.winGame("B");
-        }
-        if (!this.setJustWon) { this.updateUI(); this.saveRaw(); }
-    },
-
-    winGame(team) {
-        this.scoreA = 0; this.scoreB = 0;
-        if (team === "A") this.gamesA++; else this.gamesB++;
-        if (this.gamesA === 6 && this.gamesB === 6) {
-            this.isTieBreak = true;
-        } else if ((this.gamesA >= 6 && (this.gamesA - this.gamesB) >= 2) || this.gamesA === 7) {
-            this.winSet("A");
-        } else if ((this.gamesB >= 6 && (this.gamesB - this.gamesA) >= 2) || this.gamesB === 7) {
-            this.winSet("B");
-        }
-    },
-
-    winSet(team) {
-        let res;
-        if (this.isTieBreak) {
-            res = "S" + (this.setsA + this.setsB + 1) + ": [" + this.gamesA + "-" + this.gamesB + " (" + this.scoreA + "-" + this.scoreB + ")]";
-        } else {
-            res = "S" + (this.setsA + this.setsB + 1) + ": [" + this.gamesA + "-" + this.gamesB + "]";
-        }
-
-        if (this.historyCount === 0) this.h1 = res;
-        else if (this.historyCount === 1) this.h2 = res;
-        else if (this.historyCount === 2) this.h3 = res;
-        else if (this.historyCount === 3) this.h4 = res;
-        else if (this.historyCount === 4) this.h5 = res;
-        this.historyCount++;
-
-        if (team === "A") this.setsA++; else this.setsB++;
-
-        let setsNeeded = (this.maxSets === 3) ? 2 : 3;
-        if (this.setsA === setsNeeded || this.setsB === setsNeeded) {
-            this.isMatchOver = true;
-            this.showWinPage = true;
-            this.winner = team;
-        } else {
-            this.gamesA = 0; this.gamesB = 0;
-            this.scoreA = 0; this.scoreB = 0;
-            this.isTieBreak = false;
-        }
-        this.setJustWon = true;
         this.updateUI();
         this.saveRaw();
     },
 
-    updateUI() {
-        if (this.isTieBreak) {
-            this.pointsA = this.scoreA.toString();
-            this.pointsB = this.scoreB.toString();
+    winGame(w) {
+        this.scoreA = 0; this.scoreB = 0;
+        if (w === 'A') this.gamesA++; else this.gamesB++;
+        this.buzz('short');
+        this.flipServe();
+        if (this.gamesA === 6 && this.gamesB === 6) {
+            this.isTieBreak = true;
+        } else if (this.gamesA >= 6 && (this.gamesA - this.gamesB) >= 2 || this.gamesA === 7) {
+            this.winSet("A");
+        } else if (this.gamesB >= 6 && (this.gamesB - this.gamesA) >= 2 || this.gamesB === 7) {
+            this.winSet("B");
+        }
+    },
+
+    winSet(w) {
+        this.hist.push(this.gamesA + "-" + this.gamesB + (this.isTieBreak ? "(" + this.scoreA + "-" + this.scoreB + ")" : ""));
+        if (w === 'A') this.setsA++; else this.setsB++;
+        const needed = Math.ceil(this.maxSets / 2);
+        if (this.setsA === needed || this.setsB === needed) {
+            this.isMatchOver = true;
+            this.showWinPage = true;
+            this.winner = w;
+            this.t1 = Math.floor(Date.now() / 1000);
+            this.buzz('long');
         } else {
-            this.pointsA = this.pointsLabels[this.scoreA] || "0";
-            this.pointsB = this.pointsLabels[this.scoreB] || "0";
+            this.gamesA = 0; this.gamesB = 0;
+            this.scoreA = 0; this.scoreB = 0;
+            this.isTieBreak = false;
+            this.buzz('long');
+        }
+    },
+
+    flipServe() {
+        if (this.serve) this.serve = (this.serve === 'A') ? 'B' : 'A';
+    },
+
+    // Team serving now; in a tie-break the server changes after the 1st point and then every 2 points.
+    server() {
+        if (!this.serve) return "";
+        if (!this.isTieBreak) return this.serve;
+        const sw = Math.floor((this.scoreA + this.scoreB + 1) / 2) % 2;
+        return sw ? (this.serve === 'A' ? 'B' : 'A') : this.serve;
+    },
+
+    toggleServe() {
+        if (this.hist.length === 0 && this.scoreA + this.scoreB + this.gamesA + this.gamesB === 0) {
+            this.serve = (this.serve === "") ? 'A' : (this.serve === 'A' ? 'B' : "");
+            this.updateUI(); this.saveRaw();
+        }
+    },
+
+    updateUI() {
+        const sv = this.server();
+        this.srvA = sv === 'A'; this.srvB = sv === 'B';
+        const tb = this.isTieBreak;
+        this.pointsA = tb ? String(this.scoreA) : (this.pointsLabels[this.scoreA] || "0");
+        this.pointsB = tb ? String(this.scoreB) : (this.pointsLabels[this.scoreB] || "0");
+        const h = this.hist;
+        this.h1 = h[0] ? "S1  " + h[0] : ""; this.h2 = h[1] ? "S2  " + h[1] : "";
+        this.h3 = h[2] ? "S3  " + h[2] : ""; this.h4 = h[3] ? "S4  " + h[3] : "";
+        this.h5 = h[4] ? "S5  " + h[4] : "";
+        if (this.t0) {
+            const m = Math.floor(((this.t1 || Math.floor(Date.now() / 1000)) - this.t0) / 60);
+            this.duration = Math.floor(m / 60) + "h " + (m % 60) + "m";
+        } else {
+            this.duration = "-";
         }
     },
 
@@ -199,54 +176,52 @@ export default {
         this.showWinPage = false;
     },
 
+    saveState() {
+        const cur = [this.scoreA, this.scoreB, this.gamesA, this.gamesB, this.setsA, this.setsB,
+            this.isTieBreak ? 1 : 0, this.isMatchOver ? 1 : 0, this.hist.length, this.serve === 'A' ? 1 : (this.serve === 'B' ? 2 : 0)].join(',');
+        this.undo = [cur].concat(this.undo).slice(0, 3);
+    },
+
     undoPoint() {
-        if (!this.state1) return;
-        const s = JSON.parse(this.state1);
-        this.scoreA = s.sA; this.scoreB = s.sB;
-        this.gamesA = s.gA; this.gamesB = s.gB;
-        this.setsA = s.stA; this.setsB = s.stB;
-        this.isTieBreak = s.tb;
-        this.h1 = s.h1; this.h2 = s.h2; this.h3 = s.h3;
-        this.historyCount = s.hc;
-        this.isMatchOver = s.over;
-        this.winner = s.win;
-        if (!this.isMatchOver) this.showWinPage = true;
-        this.state1 = this.state2; this.state2 = this.state3; this.state3 = null;
+        if (this.undo.length === 0) return;
+        const s = this.undo[0].split(',').map(Number);
+        this.undo = this.undo.slice(1);
+        this.scoreA = s[0]; this.scoreB = s[1];
+        this.gamesA = s[2]; this.gamesB = s[3];
+        this.setsA = s[4]; this.setsB = s[5];
+        this.isTieBreak = s[6] === 1;
+        this.isMatchOver = s[7] === 1;
+        this.hist = this.hist.slice(0, s[8]);
+        this.serve = ['', 'A', 'B'][s[9]] || '';
+        if (!this.isMatchOver) { this.winner = ""; this.t1 = 0; this.showWinPage = true; }
+        if (this.hist.length === 0 && this.scoreA === 0 && this.scoreB === 0 && this.gamesA === 0 && this.gamesB === 0) this.t0 = 0;
         this.updateUI();
         this.saveRaw();
     },
 
-    saveState() {
-        const current = {
-            sA: this.scoreA, sB: this.scoreB, gA: this.gamesA, gB: this.gamesB,
-            stA: this.setsA, stB: this.setsB, tb: this.isTieBreak,
-            h1: this.h1, h2: this.h2, h3: this.h3, hc: this.historyCount,
-            over: this.isMatchOver, win: this.winner
-        };
-        this.state3 = this.state2;
-        this.state2 = this.state1;
-        this.state1 = JSON.stringify(current);
-    },
-
+    // First tap arms the button, second tap within 3 s resets (avoids wiping a match by accident).
     resetMatch() {
+        if (!this.confirmReset && !this.isMatchOver) {
+            this.confirmReset = true;
+            setTimeout(() => { this.confirmReset = false; }, 3000);
+            return;
+        }
+        this.confirmReset = false;
         this.scoreA = 0; this.scoreB = 0;
         this.gamesA = 0; this.gamesB = 0;
         this.setsA = 0; this.setsB = 0;
         this.isTieBreak = false; this.isMatchOver = false;
         this.showWinPage = true;
         this.winner = "";
-        this.h1 = ""; this.h2 = ""; this.h3 = "";
-        this.h4 = ""; this.h5 = "";
-        this.historyCount = 0;
-        this.state1 = null; this.state2 = null; this.state3 = null;
-        this.setJustWon = false;
+        this.hist = []; this.undo = [];
+        this.t0 = 0; this.t1 = 0;
         this.updateUI();
         this.saveRaw();
     },
 
     toggleMaxSets() {
-        if (this.historyCount === 0 && this.scoreA === 0 && this.scoreB === 0) {
-            this.maxSets = (this.maxSets === 3) ? 5 : 3;
+        if (this.hist.length === 0 && this.scoreA === 0 && this.scoreB === 0 && this.gamesA === 0 && this.gamesB === 0) {
+            this.maxSets = (this.maxSets === 3) ? 5 : (this.maxSets === 5 ? 1 : 3);
             this.saveRaw();
         }
     },

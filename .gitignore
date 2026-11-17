@@ -10,3 +10,9 @@
 /.clang-tidy
 **/.test
 /.appanalyzer
+/.cache
+*.p12
+*.p7b
+*.cer
+*.csr
+/material
