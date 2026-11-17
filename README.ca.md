@@ -60,7 +60,7 @@ Els fitxers de signatura (`.p12`, `.p7b`, `.cer`) no formen part d'aquest reposi
 
 ## Versió
 
-Actual: **1.5.1**
+Actual: **1.5.2**
 
 ---
 

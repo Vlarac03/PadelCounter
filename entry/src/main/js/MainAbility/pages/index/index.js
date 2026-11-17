@@ -25,7 +25,7 @@ export default {
         showWinPage: true,
         srvA: false, srvB: false,
         confirmReset: false,
-        subText: "",
+        subText: "", subColor: "#aaaaaa",
         pointAlert: "",      // "SET POINT" / "MATCH POINT" banner
         dimmed: false, origBright: 0, dimTimer: null, wakeCount: 0
     },
@@ -216,8 +216,9 @@ export default {
     updateUI() {
         const pa = this.pointLevel('A'), pb = this.pointLevel('B'), lv = Math.max(pa, pb);
         this.pointAlert = lv ? (lv === 2 ? 'MATCH POINT' : 'SET POINT') + ((pa === lv) !== (pb === lv) ? (pa === lv ? ' · ME' : ' · OPP') : '') : '';
-        // Exactly one of subText / pointAlert is non-empty (a text with `if` toggled at runtime did not render on the watch).
-        this.subText = lv ? "" : "SETS " + this.setsA + "-" + this.setsB + (this.isTieBreak ? " · TB" : "");
+        // One line under the games: the set/match point alert (yellow) or the sets (grey). Runtime `if` and an empty second text both broke the layout on the watch.
+        this.subText = lv ? this.pointAlert : "SETS " + this.setsA + "-" + this.setsB + (this.isTieBreak ? " · TB" : "");
+        this.subColor = lv ? "#ffee00" : "#aaaaaa";
         const sv = this.server();
         this.srvA = sv === 'A'; this.srvB = sv === 'B';
         const tb = this.isTieBreak;

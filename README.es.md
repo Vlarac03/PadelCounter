@@ -60,7 +60,7 @@ Los archivos de firma (`.p12`, `.p7b`, `.cer`) no forman parte de este repositor
 
 ## Versión
 
-Actual: **1.5.1**
+Actual: **1.5.2**
 
 ---
 

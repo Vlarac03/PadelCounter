@@ -28,8 +28,7 @@
                 </div>
                 <div class="info-col">
                     <text class="info-text">{{gamesA}} - {{gamesB}}</text>
-                    <text class="info-sub">{{subText}}</text>
-                    <text class="info-alert">{{pointAlert}}</text>
+                    <text class="info-sub" style="color: {{subColor}};">{{subText}}</text>
                 </div>
                 <div class="btn-box" if="{{!confirmReset}}" onclick="resetMatch">
                     <text class="btn-txt">R</text>

@@ -60,7 +60,7 @@ The signing files (`.p12`, `.p7b`, `.cer`) are not part of this repository.
 
 ## Version
 
-Current: **1.5.1**
+Current: **1.5.2**
 
 ---
 

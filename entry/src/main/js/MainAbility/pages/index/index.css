@@ -14,7 +14,6 @@
 .info-col { width: 240px; height: 80px; flex-direction: column; justify-content: center; align-items: center; }
 .info-text { font-size: 38px; color: #ffffff; text-align: center; }
 .info-sub { font-size: 22px; color: #aaaaaa; text-align: center; }
-.info-alert { font-size: 22px; color: #ffee00; text-align: center; }
 .btn-warn { background-color: #cc2222; }
 .lose { color: #ff4444; }
 .history-time { font-size: 24px; color: #888888; margin-top: 10px; }
