@@ -9,12 +9,10 @@ Un marcador de pádel para la muñeca. Toca la mitad de arriba cuando ganan los 
 Hecho para el Huawei Watch GT 6 (HarmonyOS, pantalla redonda de 466×466) con el framework JS Lite Wearable de HarmonyOS.
 
 <p align="center">
-  <img src="docs/screenshots/scoreboard.png" width="200" alt="Marcador">
-  <img src="docs/screenshots/history.png" width="200" alt="Historial">
-  <img src="docs/screenshots/settings.png" width="200" alt="Ajustes">
+  <img src="docs/screenshots/scoreboard.png" width="260" alt="Scoreboard">
 </p>
 
-_Las capturas son de la v1.2. Desde entonces la barra central muestra juegos y sets en dos líneas, y un punto amarillo marca quién saca._
+_Foto del reloj real (v1.5). Los avisos de punto de set y de partido sustituyen la línea de sets, en amarillo._
 
 ## Funciones
 

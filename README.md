@@ -9,12 +9,10 @@ A padel scoreboard for your wrist. Tap the top half of the screen when the oppon
 Built for the Huawei Watch GT 6 (HarmonyOS, 466×466 round display) with the HarmonyOS Lite Wearable JS framework.
 
 <p align="center">
-  <img src="docs/screenshots/scoreboard.png" width="200" alt="Scoreboard">
-  <img src="docs/screenshots/history.png" width="200" alt="Match history">
-  <img src="docs/screenshots/settings.png" width="200" alt="Settings">
+  <img src="docs/screenshots/scoreboard.png" width="260" alt="Scoreboard">
 </p>
 
-_Screenshots are from v1.2. Since then the centre bar shows games and sets on two lines, and a yellow dot marks the serving side._
+_Photo of the real watch (v1.5). Set and match point alerts replace the sets line in yellow._
 
 ## Features
 
