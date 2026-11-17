@@ -9,7 +9,7 @@ Un marcador de pàdel per al canell. Toca la meitat de dalt quan guanyen els riv
 Fet per al Huawei Watch GT 6 (HarmonyOS, pantalla rodona de 466×466) amb el framework JS Lite Wearable de HarmonyOS.
 
 <p align="center">
-  <img src="docs/screenshots/scoreboard.png" width="200" alt="Marcador">
+  <img src="docs/screenshots/scoreboard-set-point.png" width="200" alt="Marcador">
   <img src="docs/screenshots/history.png" width="200" alt="Historial">
   <img src="docs/screenshots/settings.png" width="200" alt="Ajustos">
 </p>
