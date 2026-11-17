@@ -12,7 +12,7 @@ Hecho para el Huawei Watch GT 6 (HarmonyOS, pantalla redonda de 466×466) con el
   <img src="docs/screenshots/scoreboard.png" width="260" alt="Scoreboard">
 </p>
 
-_Foto del reloj real (v1.5). Los avisos de punto de set y de partido sustituyen la línea de sets, en amarillo._
+_Captura del reloj (v1.5): un aviso amarillo de punto de set o de partido sustituye la línea de sets._
 
 ## Funciones
 

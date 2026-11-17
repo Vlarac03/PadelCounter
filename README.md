@@ -12,7 +12,7 @@ Built for the Huawei Watch GT 6 (HarmonyOS, 466×466 round display) with the Har
   <img src="docs/screenshots/scoreboard.png" width="260" alt="Scoreboard">
 </p>
 
-_Photo of the real watch (v1.5). Set and match point alerts replace the sets line in yellow._
+_Screenshot from the watch (v1.5): a yellow set point / match point alert replaces the sets line._
 
 ## Features
 

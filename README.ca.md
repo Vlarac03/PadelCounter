@@ -12,7 +12,7 @@ Fet per al Huawei Watch GT 6 (HarmonyOS, pantalla rodona de 466×466) amb el fra
   <img src="docs/screenshots/scoreboard.png" width="260" alt="Scoreboard">
 </p>
 
-_Foto del rellotge real (v1.5). Els avisos de punt de set i de partit substitueixen la línia de sets, en groc._
+_Captura del rellotge (v1.5): un avís groc de punt de set o de partit substitueix la línia de sets._
 
 ## Funcions
 
