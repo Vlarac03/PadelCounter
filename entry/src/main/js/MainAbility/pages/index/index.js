@@ -18,6 +18,7 @@ export default {
         hist: [],            // finished sets: "6-4" or "7-6(7-5)"
         h1: "", h2: "", h3: "", h4: "", h5: "",
         undo: [],            // last 3 states, newest first
+        vibrate: true,
         serve: "",           // serving team "A"/"B", "" = off
         t0: 0, t1: 0,        // match start / end (unix seconds)
         duration: "-",
@@ -37,6 +38,7 @@ export default {
     },
 
     buzz(mode) {
+        if (!this.vibrate) return;
         try { vibrator.vibrate({ mode: mode, success: function() {}, fail: function() {} }); } catch (e) {}
     },
 
@@ -44,7 +46,7 @@ export default {
         const set = (key, value) => storage.set({ key: key, value: value, success: function() {}, fail: function() {} });
         set('mn', [this.scoreA, this.scoreB, this.gamesA, this.gamesB, this.setsA, this.setsB,
             this.isTieBreak ? 1 : 0, this.isMatchOver ? 1 : 0, this.winner, this.maxSets,
-            this.goldenPoint ? 1 : 0, this.t0, this.t1, this.serve].join(','));
+            this.goldenPoint ? 1 : 0, this.t0, this.t1, this.serve, this.vibrate ? 1 : 0].join(','));
         set('mh', this.hist.join(';'));
         set('mu', this.undo.join(';'));
     },
@@ -57,7 +59,7 @@ export default {
         });
         get('mn', (mn) => {
             const s = mn.split(',');
-            if (s.length === 14) {   // ignores the old JSON format from v1.3
+            if (s.length === 15) {   // ignores the old JSON format from v1.3
                 this.scoreA = +s[0]; this.scoreB = +s[1];
                 this.gamesA = +s[2]; this.gamesB = +s[3];
                 this.setsA = +s[4]; this.setsB = +s[5];
@@ -66,7 +68,7 @@ export default {
                 this.winner = s[8];
                 this.maxSets = +s[9] || 3;
                 this.goldenPoint = s[10] === '1';
-                this.t0 = +s[11]; this.t1 = +s[12]; this.serve = s[13];
+                this.t0 = +s[11]; this.t1 = +s[12]; this.serve = s[13]; this.vibrate = s[14] !== '0';
             }
             get('mh', (mh) => {
                 this.hist = (mn.charAt(0) !== '{' && mh && mh.charAt(0) !== '{') ? mh.split(';') : [];
@@ -224,6 +226,12 @@ export default {
             this.maxSets = (this.maxSets === 3) ? 5 : (this.maxSets === 5 ? 1 : 3);
             this.saveRaw();
         }
+    },
+
+    toggleVibrate() {
+        this.vibrate = !this.vibrate;
+        this.buzz('short');
+        this.saveRaw();
     },
 
     toggleGoldenPoint() {

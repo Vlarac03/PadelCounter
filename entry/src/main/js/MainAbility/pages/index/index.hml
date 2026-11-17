@@ -70,6 +70,10 @@
             <text class="menu-text">Serve: {{serve === 'A' ? 'ME' : (serve === 'B' ? 'OPP' : 'OFF')}}</text>
         </div>
 
+        <div class="menu-item" onclick="toggleVibrate">
+            <text class="menu-text">Vibration: {{vibrate ? 'ON' : 'OFF'}}</text>
+        </div>
+
         <text class="footer-text">Developed by Vlarac</text>
     </div>
 </swiper>

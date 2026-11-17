@@ -3,8 +3,8 @@
     "bundleName": "com.vlarac.padelcounter",
     "vendor": "Vlarac",
     "version": {
-      "code": 140,
-      "name": "1.4.0"
+      "code": 142,
+      "name": "1.4.2"
     }
   },
   "deviceConfig": {

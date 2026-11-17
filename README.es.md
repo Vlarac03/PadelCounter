@@ -24,7 +24,7 @@ _Las capturas son de la v1.2. Desde entonces la barra central muestra juegos y s
 - **Indicador de saque:** un punto amarillo muestra quién saca. Cambia cada juego y sigue la rotación del tie-break (tras el primer punto y luego cada dos).
 - **Deshacer** los últimos 3 puntos. El historial de deshacer sobrevive si se cierra la app.
 - **Historial del partido** con el resultado de cada set, con el detalle del tie-break (p. ej. `7-6(7-5)`), y la duración del partido.
-- **Vibración:** una corta al ganar un juego y una larga al ganar un set o el partido.
+- **Vibración:** una corta al ganar un juego y una larga al ganar un set o el partido. Se puede desactivar en Ajustes.
 - **Reinicio seguro:** el botón `R` se pone rojo y pide `OK?`; un segundo toque antes de 3 segundos reinicia.
 - **Mantiene la pantalla encendida** durante el partido y **guarda cada punto**, así que puedes continuar si el sistema cierra la app.
 
@@ -58,7 +58,7 @@ Los archivos de firma (`.p12`, `.p7b`, `.cer`) no forman parte de este repositor
 
 ## Versión
 
-Actual: **1.4.0**
+Actual: **1.4.2**
 
 ---
 
