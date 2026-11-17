@@ -40,7 +40,8 @@ There is no store release. You build and install it yourself:
 
 1. Install [DevEco Studio](https://developer.huawei.com/consumer/en/deveco-studio/) and open this folder.
 2. In **File > Project Structure > Signing Configs**, generate your own debug signature (it needs a Huawei developer account and your watch registered as a test device).
-3. Connect the watch and run the project on it.
+3. Install the **DevEco Assistant** app on your phone and connect the watch through it. Huawei makes this step rather fiddly, so allow some time.
+4. Install the signed `.hap` on the watch with DevEco Assistant: either run the project from DevEco Studio, or copy the built `.hap` to your phone and install it from the app.
 
 The signing files (`.p12`, `.p7b`, `.cer`) are not part of this repository.
 

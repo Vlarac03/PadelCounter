@@ -40,7 +40,8 @@ No hi ha cap versió a la botiga. T'ho has de compilar i instal·lar tu:
 
 1. Instal·la [DevEco Studio](https://developer.huawei.com/consumer/en/deveco-studio/) i obre aquesta carpeta.
 2. A **File > Project Structure > Signing Configs**, genera la teva pròpia signatura de depuració (cal un compte de desenvolupador de Huawei i el rellotge registrat com a dispositiu de proves).
-3. Connecta el rellotge i executa el projecte.
+3. Instal·la l'app **DevEco Assistant** al mòbil i connecta-hi el rellotge. Huawei ho fa força feixuc, així que compta amb una estona.
+4. Instal·la el `.hap` signat al rellotge amb DevEco Assistant: executa el projecte des de DevEco Studio, o copia el `.hap` compilat al mòbil i instal·la'l des de l'app.
 
 Els fitxers de signatura (`.p12`, `.p7b`, `.cer`) no formen part d'aquest repositori.
 

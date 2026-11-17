@@ -40,7 +40,8 @@ No hay versión en la tienda. Tienes que compilarla e instalarla tú:
 
 1. Instala [DevEco Studio](https://developer.huawei.com/consumer/en/deveco-studio/) y abre esta carpeta.
 2. En **File > Project Structure > Signing Configs**, genera tu propia firma de depuración (hace falta una cuenta de desarrollador de Huawei y el reloj registrado como dispositivo de pruebas).
-3. Conecta el reloj y ejecuta el proyecto.
+3. Instala la app **DevEco Assistant** en el móvil y conecta el reloj a través de ella. Huawei lo hace bastante engorroso, así que cuenta con un rato.
+4. Instala el `.hap` firmado en el reloj con DevEco Assistant: ejecuta el proyecto desde DevEco Studio, o copia el `.hap` compilado al móvil e instálalo desde la app.
 
 Los archivos de firma (`.p12`, `.p7b`, `.cer`) no forman parte de este repositorio.
 
