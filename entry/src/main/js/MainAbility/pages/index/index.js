@@ -24,17 +24,58 @@ export default {
         duration: "-",
         showWinPage: true,
         srvA: false, srvB: false,
-        confirmReset: false
+        confirmReset: false,
+        subText: "",
+        pointAlert: "",      // "SET POINT" / "MATCH POINT" banner
+        dimmed: false, origBright: 0, dimTimer: null, wakeCount: 0
     },
 
     onInit() {
         brightness.setKeepScreenOn({ keepScreenOn: true, success: function() {}, fail: function() {} });
         this.updateUI();
         this.loadRaw();
+        this.wake();
     },
 
     onShow() {
         this.updateUI();
+        this.wake();
+    },
+
+    onHide() {
+        this.restoreBrightness();
+    },
+
+    onDestroy() {
+        this.restoreBrightness();
+    },
+
+    // Dim the screen after 90 s without touches to save battery; any touch brings it back.
+    wake() {
+        this.wakeCount++;
+        if (this.dimTimer) clearTimeout(this.dimTimer);
+        if (this.dimmed) this.restoreBrightness();
+        this.dimTimer = setTimeout(() => { this.dim(); }, 90000);
+    },
+
+    dim() {
+        const n = this.wakeCount;
+        brightness.getValue({
+            success: (d) => {
+                if (n !== this.wakeCount || this.dimmed) return;   // touched meanwhile
+                this.origBright = d.value;
+                this.dimmed = true;
+                brightness.setValue({ value: Math.max(15, Math.round(d.value * 0.3)), success: function() {}, fail: function() {} });
+            },
+            fail: function() {}
+        });
+    },
+
+    restoreBrightness() {
+        if (this.dimTimer) { clearTimeout(this.dimTimer); this.dimTimer = null; }
+        if (!this.dimmed) return;
+        this.dimmed = false;
+        brightness.setValue({ value: this.origBright, success: function() {}, fail: function() {} });
     },
 
     buzz(mode) {
@@ -84,6 +125,7 @@ export default {
     addPointB() { this.addPoint('B'); },
 
     addPoint(w) {
+        this.wake();
         if (this.isMatchOver) return;
         this.saveState();
         if (!this.t0) this.t0 = Math.floor(Date.now() / 1000);
@@ -156,7 +198,26 @@ export default {
         }
     },
 
+    // Does the next point by team w win the current game (or the tie-break)?
+    canWin(w) {
+        const l = (w === 'A') ? 'B' : 'A', s = this['score' + w], o = this['score' + l];
+        if (this.isTieBreak) return s + 1 >= 7 && (s + 1 - o) >= 2;
+        return s === 4 || (s === 3 && (o < 3 || this.goldenPoint));
+    },
+
+    // 0 = nothing, 1 = set point, 2 = match point for team w
+    pointLevel(w) {
+        if (this.isMatchOver || !this.canWin(w)) return 0;
+        const l = (w === 'A') ? 'B' : 'A', g = this['games' + w] + 1, og = this['games' + l];
+        if (!(this.isTieBreak || (g >= 6 && (g - og) >= 2) || g === 7)) return 0;
+        return (this['sets' + w] + 1 === Math.ceil(this.maxSets / 2)) ? 2 : 1;
+    },
+
     updateUI() {
+        const pa = this.pointLevel('A'), pb = this.pointLevel('B'), lv = Math.max(pa, pb);
+        this.pointAlert = lv ? (lv === 2 ? 'MATCH POINT' : 'SET POINT') + ((pa === lv) !== (pb === lv) ? (pa === lv ? ' · ME' : ' · OPP') : '') : '';
+        // Exactly one of subText / pointAlert is non-empty (a text with `if` toggled at runtime did not render on the watch).
+        this.subText = lv ? "" : "SETS " + this.setsA + "-" + this.setsB + (this.isTieBreak ? " · TB" : "");
         const sv = this.server();
         this.srvA = sv === 'A'; this.srvB = sv === 'B';
         const tb = this.isTieBreak;
@@ -185,6 +246,7 @@ export default {
     },
 
     undoPoint() {
+        this.wake();
         if (this.undo.length === 0) return;
         const s = this.undo[0].split(',').map(Number);
         this.undo = this.undo.slice(1);
@@ -203,6 +265,7 @@ export default {
 
     // First tap arms the button, second tap within 3 s resets (avoids wiping a match by accident).
     resetMatch() {
+        this.wake();
         if (!this.confirmReset && !this.isMatchOver) {
             this.confirmReset = true;
             setTimeout(() => { this.confirmReset = false; }, 3000);

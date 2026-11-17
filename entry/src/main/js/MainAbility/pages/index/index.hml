@@ -1,4 +1,4 @@
-<swiper class="full-screen" index="0" vertical="false" indicator="false">
+<swiper class="full-screen" index="0" vertical="false" indicator="false" ontouchstart="wake">
 
     <div class="container">
         <div class="container win-page" if="{{isMatchOver && showWinPage}}">
@@ -28,7 +28,8 @@
                 </div>
                 <div class="info-col">
                     <text class="info-text">{{gamesA}} - {{gamesB}}</text>
-                    <text class="info-sub">SETS {{setsA}}-{{setsB}}{{isTieBreak ? ' · TB' : ''}}</text>
+                    <text class="info-sub">{{subText}}</text>
+                    <text class="info-alert">{{pointAlert}}</text>
                 </div>
                 <div class="btn-box" if="{{!confirmReset}}" onclick="resetMatch">
                     <text class="btn-txt">R</text>

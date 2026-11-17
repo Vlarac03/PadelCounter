@@ -24,6 +24,8 @@ _Screenshots are from v1.2. Since then the centre bar shows games and sets on tw
 - **Serve indicator:** a yellow dot shows who serves. It switches every game and follows the tie-break rotation (after the first point, then every two).
 - **Undo** the last 3 points. The undo history survives the app being closed.
 - **Match history** with the score of every set, tie-break detail included (e.g. `7-6(7-5)`), plus the match duration.
+- **Set point / match point** alert in the centre bar, with the side that can win it.
+- **Battery saver:** the screen dims after 90 seconds without touches and brightens again on touch.
 - **Haptics:** a short buzz when a game is won, a long one for a set or the match. Can be turned off in Settings.
 - **Safe reset:** the `R` button turns red and asks `OK?`; a second tap within 3 seconds resets.
 - **Keeps the screen on** during the match and **saves every point**, so you can pick up where you left off if the system closes the app.
@@ -58,7 +60,7 @@ The signing files (`.p12`, `.p7b`, `.cer`) are not part of this repository.
 
 ## Version
 
-Current: **1.4.2**
+Current: **1.5.1**
 
 ---
 

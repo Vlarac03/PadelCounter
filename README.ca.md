@@ -24,6 +24,8 @@ _Les captures són de la v1.2. Des d'aleshores la barra central mostra jocs i se
 - **Indicador de servei:** un punt groc mostra qui serveix. Canvia cada joc i segueix la rotació del tie-break (després del primer punt i després cada dos).
 - **Desfer** els últims 3 punts. L'historial de desfer sobreviu si es tanca l'app.
 - **Historial del partit** amb el resultat de cada set, amb el detall del tie-break (p. ex. `7-6(7-5)`), i la durada del partit.
+- **Avís de punt de set i de partit** a la barra central, amb el costat que el pot guanyar.
+- **Estalvi de bateria:** la pantalla s'atenua després de 90 segons sense tocar-la i torna a la brillantor normal en tocar-la.
 - **Vibració:** una de curta en guanyar un joc i una de llarga en guanyar un set o el partit. Es pot desactivar a Ajustos.
 - **Reset segur:** el botó `R` es posa vermell i demana `OK?`; un segon toc abans de 3 segons reinicia.
 - **Manté la pantalla encesa** durant el partit i **desa cada punt**, així que pots continuar si el sistema tanca l'app.
@@ -58,7 +60,7 @@ Els fitxers de signatura (`.p12`, `.p7b`, `.cer`) no formen part d'aquest reposi
 
 ## Versió
 
-Actual: **1.4.2**
+Actual: **1.5.1**
 
 ---
 
