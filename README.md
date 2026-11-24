@@ -49,6 +49,9 @@ The signing files (`.p12`, `.p7b`, `.cer`) are not part of this repository.
 
 ## Project structure
 
+<details>
+<summary>Files</summary>
+
 | File | What it does |
 | --- | --- |
 | `entry/src/main/js/MainAbility/pages/index/index.js` | Scoring rules, serve, undo, saving and loading |
@@ -57,6 +60,12 @@ The signing files (`.p12`, `.p7b`, `.cer`) are not part of this repository.
 | `entry/src/main/config.json` | Bundle name, permissions, version |
 
 `@system.storage` on lite wearables only holds about 128 bytes per value, so the match is saved as three short comma-separated strings (state, set history, undo stack).
+
+</details>
+
+## Data and licences
+
+- Code: [MIT](LICENSE).
 
 ## Version
 

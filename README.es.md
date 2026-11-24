@@ -49,6 +49,9 @@ Los archivos de firma (`.p12`, `.p7b`, `.cer`) no forman parte de este repositor
 
 ## Estructura del proyecto
 
+<details>
+<summary>Archivos</summary>
+
 | Archivo | Qué hace |
 | --- | --- |
 | `entry/src/main/js/MainAbility/pages/index/index.js` | Reglas de puntuación, saque, deshacer, guardar y cargar |
@@ -57,6 +60,12 @@ Los archivos de firma (`.p12`, `.p7b`, `.cer`) no forman parte de este repositor
 | `entry/src/main/config.json` | Nombre del paquete, permisos y versión |
 
 `@system.storage` en los relojes lite solo admite unos 128 bytes por valor, así que el partido se guarda en tres cadenas cortas separadas por comas (estado, historial de sets y pila de deshacer).
+
+</details>
+
+## Datos y licencias
+
+- Código: [MIT](LICENSE).
 
 ## Versión
 

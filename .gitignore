@@ -16,3 +16,7 @@
 *.cer
 *.csr
 /material
+
+# Local notes (not pushed)
+CLAUDE.md
+TODO.md

@@ -49,6 +49,9 @@ Els fitxers de signatura (`.p12`, `.p7b`, `.cer`) no formen part d'aquest reposi
 
 ## Estructura del projecte
 
+<details>
+<summary>Fitxers</summary>
+
 | Fitxer | Què fa |
 | --- | --- |
 | `entry/src/main/js/MainAbility/pages/index/index.js` | Regles de puntuació, servei, desfer, desar i carregar |
@@ -57,6 +60,12 @@ Els fitxers de signatura (`.p12`, `.p7b`, `.cer`) no formen part d'aquest reposi
 | `entry/src/main/config.json` | Nom del paquet, permisos i versió |
 
 `@system.storage` als rellotges lite només admet uns 128 bytes per valor, així que el partit es desa en tres cadenes curtes separades per comes (estat, historial de sets i pila de desfer).
+
+</details>
+
+## Dades i llicències
+
+- Codi: [MIT](LICENSE).
 
 ## Versió
 
